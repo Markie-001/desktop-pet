@@ -34,9 +34,22 @@ def get_frame(number):
     picture = sheet.copy(QRect(x, y, SIZE, SIZE))
     return picture.scaled(SIZE * SCALE, SIZE * SCALE, Qt.KeepAspectRatio, Qt.FastTransformation)
 
-pet.setPixmap(get_frame(15))
-pet.resize(SIZE * SCALE, SIZE * SCALE)
+anim = "idle"
+frame = 0
 
+def next_frame():
+    global frame
+    start, count = ANIMATION[anim]
+    frame = (frame + 1) % count
+    pet.setPixmap(get_frame(start + frame))
+
+pet.setPixmap(get_frame(ANIMATION[anim][0]))
+
+timer = QTimer()
+timer.timeout.connect(next_frame)
+timer.start(SPEED[anim])
+
+pet.resize(SIZE * SCALE, SIZE * SCALE)
 pet.mousePressEvent = lambda e: app.quit()
 pet.show()
 
