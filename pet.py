@@ -10,15 +10,15 @@ app = QApplication(sys.argv)
 pet = QLabel()
 pet.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
 pet.setAttribute(Qt.WA_TranslucentBackground)
-pet.setAttribute(Qt.WA_MacAlwaysShowToolWindow)  # keeps it visible on Mac
+pet.setAttribute(Qt.WA_MacAlwaysShowToolWindow)
 
 sheet = QPixmap("assets/cat.png")
-frame = sheet.copy(QRect(0, 0, SIZE, SIZE))           # first idle frame
+frame = sheet.copy(QRect(0, 0, SIZE, SIZE))
 frame = frame.scaled(SIZE * SCALE, SIZE * SCALE, Qt.KeepAspectRatio, Qt.FastTransformation)
 
 pet.setPixmap(frame)
 pet.resize(frame.size())
-pet.mousePressEvent = lambda e: app.quit()             # click the cat to close it
+pet.mousePressEvent = lambda e: app.quit()
 pet.show()
 
 sys.exit(app.exec())
