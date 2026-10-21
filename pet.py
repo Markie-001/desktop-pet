@@ -42,15 +42,31 @@ def next_frame():
     start, count = ANIMATION[anim]
     frame = (frame + 1) % count
     pet.setPixmap(get_frame(start + frame))
-
 pet.setPixmap(get_frame(ANIMATION[anim][0]))
+
+def play(name):
+    global anim, frame
+    anim = name
+    frame = 0
+    pet.setPixmap(get_frame(ANIMATION[anim][0]))
+    timer.start(SPEED[anim])
+    print("Now playing:", anim)
+
+def on_click(event):
+    if event.button() == Qt.RightButton:
+        app.quit()
+        return
+    names = list(ANIMATION)
+    position = names.index(anim)
+    next_name = names[(position + 1) % len(names)]
+    play(next_name)
 
 timer = QTimer()
 timer.timeout.connect(next_frame)
 timer.start(SPEED[anim])
 
 pet.resize(SIZE * SCALE, SIZE * SCALE)
-pet.mousePressEvent = lambda e: app.quit()
+pet.mousePressEvent = on_click
 pet.show()
 
 sys.exit(app.exec())
