@@ -31,14 +31,14 @@ pet.setAttribute(Qt.WA_MacAlwaysShowToolWindow)
 sheet = QPixmap("assets/cat.png")
 
 def get_frame(number):
-    x = (number % COLUMNS) * SIZE
-    y = (number // COLUMNS) * SIZE
-    picture = sheet.copy(QRect(x, y, SIZE, SIZE))
+    sheet_x = (number % COLUMNS) * SIZE
+    sheet_y = (number // COLUMNS) * SIZE
+    picture = sheet.copy(QRect(sheet_x, sheet_y, SIZE, SIZE))
     if facing == -1:
         picture = picture.transformed(QTransform().scale(-1, 1))
     return picture.scaled(SIZE * SCALE, SIZE * SCALE, Qt.KeepAspectRatio, Qt.FastTransformation)
 
-anim = "idle"
+anim = "walk"
 frame = 0
 
 def next_frame():
@@ -46,7 +46,6 @@ def next_frame():
     start, count = ANIMATION[anim]
     frame = (frame + 1) % count
     pet.setPixmap(get_frame(start + frame))
-
 pet.setPixmap(get_frame(ANIMATION[anim][0]))
 
 def play(name):
@@ -72,6 +71,26 @@ def on_click(event):
 timer = QTimer()
 timer.timeout.connect(next_frame)
 timer.start(SPEED[anim])
+
+pet_x = 100
+def move():
+    global pet_x, facing
+    area = pet.screen().availableGeometry()
+    pet_y = area.y() + area.height() - pet.height()
+
+    if anim == "walk":
+        pet_x = pet_x + 2 * facing
+        if pet_x < area.left():
+            pet_x = area.left()
+            facing = 1
+        if pet_x > area.right() - pet.width():
+            pet_x = area.right() - pet.width()
+            facing = -1
+    pet.move(pet_x, pet_y)
+
+mover = QTimer()
+mover.timeout.connect(move)
+mover.start(33)
 
 pet.resize(SIZE * SCALE, SIZE * SCALE)
 pet.mousePressEvent = on_click
