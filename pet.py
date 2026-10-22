@@ -62,16 +62,11 @@ def play(name):
 
 # Left click to change animation, right click to quit
 def on_click(event):
-    global facing
     if event.button() == Qt.RightButton:
         app.quit()
         return
-    names = list(ANIMATION)
-    position = names.index(anim)
-    next_name = names[(position + 1) % len(names)]
-    if next_name == "idle":
-        facing = -facing
-    play(next_name)
+    play("happy")
+    mood_timer.start(2000)
 
 timer = QTimer()
 timer.timeout.connect(next_frame)
