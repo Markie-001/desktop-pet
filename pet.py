@@ -98,6 +98,7 @@ mover = QTimer()
 mover.timeout.connect(move)
 mover.start(33)
 
+# Change what the cat is doing
 def change_mood():
     global facing
     choice = random.choice(["walk", "walk", "idle", "sit", "sleep"])
