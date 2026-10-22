@@ -1,10 +1,11 @@
 import sys
 from PySide6.QtCore import Qt, QRect, QTimer
-from PySide6.QtGui import QPixmap
+from PySide6.QtGui import QPixmap, QTransform
 from PySide6.QtWidgets import QApplication, QLabel
 
 SIZE, SCALE = 32, 4
 COLUMNS = 6
+facing = 1
 
 ANIMATION = {
     "idle":  (1, 4),
@@ -28,10 +29,13 @@ pet.setAttribute(Qt.WA_TranslucentBackground)
 pet.setAttribute(Qt.WA_MacAlwaysShowToolWindow)
 
 sheet = QPixmap("assets/cat.png")
+
 def get_frame(number):
     x = (number % COLUMNS) * SIZE
     y = (number // COLUMNS) * SIZE
     picture = sheet.copy(QRect(x, y, SIZE, SIZE))
+    if facing == -1:
+        picture = picture.transformed(QTransform().scale(-1, 1))
     return picture.scaled(SIZE * SCALE, SIZE * SCALE, Qt.KeepAspectRatio, Qt.FastTransformation)
 
 anim = "idle"
@@ -42,6 +46,7 @@ def next_frame():
     start, count = ANIMATION[anim]
     frame = (frame + 1) % count
     pet.setPixmap(get_frame(start + frame))
+
 pet.setPixmap(get_frame(ANIMATION[anim][0]))
 
 def play(name):
@@ -53,12 +58,15 @@ def play(name):
     print("Now playing:", anim)
 
 def on_click(event):
+    global facing
     if event.button() == Qt.RightButton:
         app.quit()
         return
     names = list(ANIMATION)
     position = names.index(anim)
     next_name = names[(position + 1) % len(names)]
+    if next_name == "idle":
+        facing = -facing
     play(next_name)
 
 timer = QTimer()
