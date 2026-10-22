@@ -1,4 +1,5 @@
 import sys
+import random
 from PySide6.QtCore import Qt, QRect, QTimer
 from PySide6.QtGui import QPixmap, QTransform
 from PySide6.QtWidgets import QApplication, QLabel
@@ -6,7 +7,7 @@ from PySide6.QtWidgets import QApplication, QLabel
 SIZE, SCALE = 32, 4
 COLUMNS = 6
 facing = 1
-
+# The animations of the pet :)
 ANIMATION = {
     "idle":  (1, 4),
     "walk":  (5, 6),
@@ -17,10 +18,10 @@ ANIMATION = {
     "land":  (25, 3),
     "happy": (28, 4),
 }
-
+# The frame speed of the pet 😂 HAHAHAHAHAHA
 SPEED = {"idle": 250, "walk": 120, "sit": 300, "sleep": 500,
          "drag": 150, "fall": 150, "land": 120, "happy": 200}
-
+# Start the app
 app = QApplication(sys.argv)
 
 pet = QLabel()
@@ -30,6 +31,7 @@ pet.setAttribute(Qt.WA_MacAlwaysShowToolWindow)
 
 sheet = QPixmap("assets/cat.png")
 
+# Get the pic from the sheet
 def get_frame(number):
     sheet_x = (number % COLUMNS) * SIZE
     sheet_y = (number // COLUMNS) * SIZE
@@ -41,6 +43,7 @@ def get_frame(number):
 anim = "walk"
 frame = 0
 
+# Next frame/picture
 def next_frame():
     global frame
     start, count = ANIMATION[anim]
@@ -48,6 +51,7 @@ def next_frame():
     pet.setPixmap(get_frame(start + frame))
 pet.setPixmap(get_frame(ANIMATION[anim][0]))
 
+# Switch animation
 def play(name):
     global anim, frame
     anim = name
@@ -56,6 +60,7 @@ def play(name):
     timer.start(SPEED[anim])
     print("Now playing:", anim)
 
+# Left click to change animation, right click to quit
 def on_click(event):
     global facing
     if event.button() == Qt.RightButton:
@@ -72,6 +77,7 @@ timer = QTimer()
 timer.timeout.connect(next_frame)
 timer.start(SPEED[anim])
 
+# Walking and when reaching the edges it will turn
 pet_x = 100
 def move():
     global pet_x, facing
@@ -91,6 +97,22 @@ def move():
 mover = QTimer()
 mover.timeout.connect(move)
 mover.start(33)
+
+def change_mood():
+    global facing
+    choice = random.choice(["walk", "walk", "idle", "sit", "sleep"])
+    if choice == "walk":
+        facing = random.choice([1, -1])
+    play(choice)
+
+    if choice == "sleep":
+        mood_timer.start(random.randint(10000, 20000))
+    else:
+        mood_timer.start(random.randint(3000, 8000))
+
+mood_timer = QTimer()
+mood_timer.timeout.connect(change_mood)
+mood_timer.start(5000)
 
 pet.resize(SIZE * SCALE, SIZE * SCALE)
 pet.mousePressEvent = on_click
