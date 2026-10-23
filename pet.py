@@ -12,14 +12,10 @@ ANIMATION = {
     "walk":  (5, 6),
     "sit":   (11, 4),
     "sleep": (15, 4),
-    "drag":  (19, 4),
-    "fall":  (23, 2),
-    "land":  (25, 3),
     "happy": (28, 4),
 }
 # Frame speed in ms 😂
-SPEED = {"idle": 250, "walk": 120, "sit": 300, "sleep": 500,
-         "drag": 150, "fall": 150, "land": 120, "happy": 200}
+SPEED = {"idle": 250, "walk": 120, "sit": 300, "sleep": 500, "happy": 200}
 
 anim, frame, facing, pet_x = "walk", 0, 1, 100
 
@@ -73,13 +69,11 @@ def change_mood():
     play(choice)
     mood_timer.start(random.randint(10000, 20000) if choice == "sleep" else random.randint(3000, 8000))
 
-# Left click for :)
-def on_press(event):
+# Left click = happy, right click = quit
+def on_click(event):
     if event.button() == Qt.RightButton:
         app.quit()
-# Right click for quit
-def on_release(event):
-    if event.button() == Qt.LeftButton:
+    else:
         play("happy")
         mood_timer.start(2000)
 
@@ -94,8 +88,7 @@ mood_timer.timeout.connect(change_mood)
 mood_timer.start(5000)
 
 # Start
-pet.mousePressEvent = on_press
-pet.mouseReleaseEvent = on_release
+pet.mousePressEvent = on_click
 play(anim)
 pet.show()
 sys.exit(app.exec())
