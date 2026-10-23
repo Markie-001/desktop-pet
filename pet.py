@@ -3,6 +3,8 @@ import random
 from PySide6.QtCore import Qt, QRect, QTimer
 from PySide6.QtGui import QPixmap, QTransform
 from PySide6.QtWidgets import QApplication, QLabel
+from bubble import make_bubble, text_bubble
+from advice import get_advice
 
 SIZE, SCALE, COLUMNS = 32, 4, 6
 
@@ -27,6 +29,7 @@ pet.setAttribute(Qt.WA_TranslucentBackground)
 pet.setAttribute(Qt.WA_MacAlwaysShowToolWindow)
 pet.resize(SIZE * SCALE, SIZE * SCALE)
 sheet = QPixmap("assets/cat.png")
+bubble = make_bubble()
 
 # Show the current picture
 def show_frame():
@@ -75,7 +78,8 @@ def on_click(event):
         app.quit()
     else:
         play("happy")
-        mood_timer.start(2000)
+        text_bubble(bubble, pet, get_advice())
+        mood_timer.start(4000)
 
 # Timers
 timer = QTimer()
