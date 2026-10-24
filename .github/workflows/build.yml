@@ -25,12 +25,12 @@ jobs:
 
       - name: Build for Windows
         if: runner.os == 'Windows'
-        run: pyinstaller --onefile --name DesktopPet --add-data "assets;assets" pet.py
+        run: pyinstaller --onefile --icon assets/icon.png --name DesktopPet --add-data "assets;assets" pet.py
 
       - name: Build for Mac
         if: runner.os == 'macOS'
         run: |
-          pyinstaller --windowed --name DesktopPet --add-data "assets:assets" pet.py
+          pyinstaller --windowed --icon assets/icon.png --name DesktopPet --add-data "assets:assets" pet.py
           cd dist && zip -r DesktopPet-mac.zip DesktopPet.app
 
       - uses: softprops/action-gh-release@v2
