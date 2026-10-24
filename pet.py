@@ -5,6 +5,7 @@ from PySide6.QtGui import QPixmap, QTransform
 from PySide6.QtWidgets import QApplication, QLabel
 from bubble import make_bubble, text_bubble
 from advice import get_advice
+from tray import make_tray
 
 SIZE, SCALE, COLUMNS = 32, 4, 6
 
@@ -72,7 +73,7 @@ def change_mood():
     play(choice)
     mood_timer.start(random.randint(10000, 20000) if choice == "sleep" else random.randint(3000, 8000))
 
-# Left click = happy, right click = quit
+# Left click = happy + advice, right click = quit
 def on_click(event):
     if event.button() == Qt.RightButton:
         app.quit()
@@ -80,6 +81,11 @@ def on_click(event):
         play("happy")
         text_bubble(bubble, pet, get_advice())
         mood_timer.start(4000)
+
+# Tray command: do something for 15 seconds
+def command(name):
+    play(name)
+    mood_timer.start(15000)
 
 # Timers
 timer = QTimer()
@@ -94,5 +100,12 @@ mood_timer.start(5000)
 # Start
 pet.mousePressEvent = on_click
 play(anim)
+tray = make_tray(pet.pixmap(), {
+    "Give advice": lambda: text_bubble(bubble, pet, get_advice()),
+    "Sit": lambda: command("sit"),
+    "Sleep": lambda: command("sleep"),
+    "Walk": lambda: command("walk"),
+    "Quit": app.quit,
+})
 pet.show()
 sys.exit(app.exec())
