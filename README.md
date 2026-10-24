@@ -109,4 +109,4 @@ desktop-pet/
 - [Python](https://www.python.org/) and [PySide6 (Qt for Python)](https://doc.qt.io/qtforpython-6/)
 - [Advice Slip API](https://api.adviceslip.com/) for the advice
 - [PyInstaller](https://pyinstaller.org/) and GitHub Actions to build the apps
-- Sprites edited in [Piskel](https://www.piskelapp.com/)
+- Sprites made in [Piskel](https://www.piskelapp.com/)
