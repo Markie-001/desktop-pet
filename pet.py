@@ -1,3 +1,4 @@
+import os
 import sys
 import random
 from PySide6.QtCore import Qt, QRect, QTimer
@@ -29,7 +30,10 @@ pet.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
 pet.setAttribute(Qt.WA_TranslucentBackground)
 pet.setAttribute(Qt.WA_MacAlwaysShowToolWindow)
 pet.resize(SIZE * SCALE, SIZE * SCALE)
-sheet = QPixmap("assets/cat.png")
+def resource(path):
+    base = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__)))
+    return os.path.join(base, path)
+sheet = QPixmap(resource("assets/cat.png"))
 bubble = make_bubble()
 
 # Show the current picture
